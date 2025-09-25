@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EchoDraw Documentation</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            line-height: 1.6; 
+            margin: 40px; 
+            max-width: 800px;
+            color: #333;
+        }
+        h1, h2 { 
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "SF Mono", "Menlo", monospace;
+        }
+        .code-block {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre;
+            font-family: "SF Mono", "Menlo", monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to EchoDraw!</h1>
+    <p>
+        EchoDraw is the easiest programming language ever, designed for kids! You can use it to print messages and draw cool shapes.
+    </p>
+
+    <h2>How to Use EchoDraw</h2>
+    <ol>
+        <li>Open the <code>index.html</code> file in a web browser to use the block editor.</li>
+        <li>Drag and drop blocks to build your program.</li>
+        <li>As you add blocks, the text-based code will be generated (we will build this part next).</li>
+        <li>Copy the text-based code and paste it inside the triple quotes in the <code>run_echodraw.py</code> file.</li>
+        <li>Run the program from your Terminal to see your creation!</li>
+    </ol>
+
+    <h2>EchoDraw Commands</h2>
+    <p>Here are all the commands in EchoDraw:</p>
+
+    <h3><code>print [message]</code></h3>
+    <ul>
+        <li><strong>What it does:</strong> Displays a message in the Terminal.</li>
+        <li><strong>Example:</strong> <code>print Hello there!</code></li>
+    </ul>
+
+    <h3><code>move_forward [pixels]</code></h3>
+    <ul>
+        <li><strong>What it does:</strong> Moves the turtle forward by a certain number of pixels.</li>
+        <li><strong>Example:</strong> <code>move_forward 50</code></li>
+    </ul>
+
+    <h3><code>turn_right [degrees]</code></h3>
+    <ul>
+        <li><strong>What it does:</strong> Turns the turtle to the right by a certain number of degrees.</li>
+        <li><strong>Example:</strong> <code>turn_right 90</code></li>
+    </ul>
+
+    <h2>Example Programs</h2>
+
+    <h3>Drawing a Triangle</h3>
+    <div class="code-block">move_forward 100
+turn_right 120
+move_forward 100
+turn_right 120
+move_forward 100</div>
+
+</body>
+</html>

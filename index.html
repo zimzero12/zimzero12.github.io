@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>EchoDraw</title>
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; flex-direction: column; align-items: center; }
+    #header { width: 100%; text-align: center; }
+    #main-container { display: flex; flex-direction: row; justify-content: center; width: 100%; }
+    #editor-container { margin: 10px; }
+    #display-container { margin: 10px; }
+    #drawingCanvas { border: 2px solid #ccc; border-radius: 4px; }
+    #generated-code { background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 10px; white-space: pre; font-family: "SF Mono", "Menlo", monospace; height: 200px; overflow-y: auto; }
+    button { background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+    button:hover { background-color: #45a049; }
+  </style>
+</head>
+<body>
+
+  <div id="header">
+    <h1>EchoDraw</h1>
+    <p>Build with blocks, then click the "Run Program" button to see your creation!</p>
+  </div>
+
+  <div id="main-container">
+    <div id="editor-container">
+      <h2>Visual Editor</h2>
+      <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+    </div>
+    <div id="display-container">
+      <h2>Drawing Canvas</h2>
+      <canvas id="drawingCanvas" width="400" height="400"></canvas>
+      <button onclick="runCode()">Run Program</button>
+      <h2>Generated Code</h2>
+      <pre id="generated-code">Your code will appear here.</pre>
+    </div>
+  </div>
+
+  <xml id="toolbox" style="display: none">
+    <block type="controls_repeat_ext"><value name="TIMES"><shadow type="math_number"><field name="NUM">4</field></shadow></value></block>
+    <block type="draw_move_forward"></block>
+    <block type="draw_turn_right"></block>
+    <block type="math_number"><field name="NUM">100</field></block>
+  </xml>
+
+  <script>
+    // === PART 1: BLOCKLY SETUP (Blocks & Generator) ===
+
+    Blockly.Blocks['draw_move_forward'] = { init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("move forward by"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); } };
+    Blockly.Blocks['draw_turn_right'] = { init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("turn right by"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); } };
+    
+    Blockly.EchoDraw = new Blockly.Generator('EchoDraw');
+    Blockly.EchoDraw.forBlock['controls_repeat_ext'] = function(b) { const r = Blockly.EchoDraw.valueToCode(b,'TIMES',0)||'0'; const d = Blockly.EchoDraw.statementToCode(b,'DO'); return `repeat ${r}\n${d}end_repeat\n`; };
+    Blockly.EchoDraw.forBlock['draw_move_forward'] = function(b) { const v = Blockly.EchoDraw.valueToCode(b,'VALUE',0)||'0'; return `move_forward ${v}\n`; };
+    Blockly.EchoDraw.forBlock['draw_turn_right'] = function(b) { const v = Blockly.EchoDraw.valueToCode(b,'VALUE',0)||'0'; return `turn_right ${v}\n`; };
+    Blockly.EchoDraw.forBlock['math_number'] = function(b) { return [String(b.getFieldValue('NUM')), 0]; };
+    Blockly.EchoDraw.scrub_ = function(b, c) { const n = b.nextConnection && b.nextConnection.targetBlock(); return c + Blockly.EchoDraw.blockToCode(n); };
+
+    const workspace = Blockly.inject('blocklyDiv', { toolbox: document.getElementById('toolbox') });
+    workspace.addChangeListener(e => { document.getElementById('generated-code').innerText = Blockly.EchoDraw.workspaceToCode(workspace); });
+
+    // === PART 2: JAVASCRIPT TURTLE & INTERPRETER ===
+
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // The JavaScript "Turtle" object
+    const turtle = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        angle: -90, // Start facing up
+        penDown: true,
+        reset: function() {
+            this.x = canvas.width / 2;
+            this.y = canvas.height / 2;
+            this.angle = -90;
+            this.penDown = true;
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Begin the drawing path
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+        },
+        move: function(distance) {
+            const rad = this.angle * (Math.PI / 180); // Convert angle to radians
+            const newX = this.x + Math.cos(rad) * distance;
+            const newY = this.y + Math.sin(rad) * distance;
+            
+            if (this.penDown) {
+                ctx.lineTo(newX, newY);
+                ctx.stroke();
+            } else {
+                ctx.moveTo(newX, newY);
+            }
+            this.x = newX;
+            this.y = newY;
+        },
+        turn: function(degrees) {
+            this.angle += degrees;
+        }
+    };
+    
+    // The new JavaScript Interpreter
+    function runCode() {
+        turtle.reset();
+        
+        const code = Blockly.EchoDraw.workspaceToCode(workspace);
+        const lines = code.split('\n');
+        
+        function execute(lines) {
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                const parts = line.split(' ');
+                const command = parts[0];
+
+                if (command === 'move_forward') {
+                    turtle.move(parseInt(parts[1]));
+                } else if (command === 'turn_right') {
+                    turtle.turn(parseInt(parts[1]));
+                } else if (command === 'repeat') {
+                    const repeatCount = parseInt(parts[1]);
+                    const loopBody = [];
+                    let nestLevel = 1;
+                    // Find the loop body
+                    for (let j = i + 1; j < lines.length; j++) {
+                        const loopLine = lines[j].trim();
+                        if (loopLine === 'repeat') nestLevel++;
+                        if (loopLine === 'end_repeat') nestLevel--;
+                        if (nestLevel === 0) {
+                            i = j; // Jump past the loop
+                            break;
+                        }
+                        loopBody.push(loopLine);
+                    }
+                    // Execute the loop
+                    for (let k = 0; k < repeatCount; k++) {
+                        execute(loopBody);
+                    }
+                }
+            }
+        }
+        
+        execute(lines);
+    }
+  </script>
+</body>
+</html>
