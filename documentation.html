@@ -4,62 +4,80 @@
     <meta charset="UTF-8">
     <title>EchoDraw Documentation</title>
     <style>
-        /* CSS Styles are unchanged */
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; margin: 40px; max-width: 800px; color: #333; }
-        h1, h2, h3 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .block-name { background-color: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: "SF Mono", "Menlo", monospace; font-weight: bold; }
-        .example-box { background-color: #f9f9f9; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            max-width: 800px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .block-name {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "SF Mono", "Menlo", monospace;
+            font-weight: bold;
+        }
+        .example-box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .button-name {
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+            font-family: "SF Mono", "Menlo", monospace;
+            font-weight: bold;
+        }
+        .run-btn { background-color: #4CAF50; }
+        .save-btn { background-color: #008CBA; }
+        .share-btn { background-color: #f44336; }
     </style>
 </head>
 <body>
-
+    <!-- The main content will go in Part 2 -->
     <h1>Welcome to EchoDraw!</h1>
     <p>
-        Hi! This is the instruction manual for EchoDraw, the programming language I made for you to learn and have fun with. It's now upgraded with an Artist's Toolkit!
+        This is the instruction manual for EchoDraw. I've added some powerful new tools to help you save, share, and even become a pro coder!
     </p>
 
-    <h2>The Blocks</h2>
-    <p>These are the puzzle pieces you can use to give the computer instructions.</p>
-
-    <h3>Drawing Blocks</h3>
+    <h2>The Main Buttons</h2>
+    <p>You now have three powerful buttons to control your projects.</p>
     <div class="example-box">
-        <p><span class="block-name">move forward</span>: Tells the turtle to move forward and draw a line.</p>
-        <p><span class="block-name">turn right</span>: Tells the turtle to turn in place.</p>
+        <p><span class="button-name run-btn">Run Program</span>: Click this to run the code in the editor and see your turtle draw on the canvas.</p>
+        <p><span class="button-name save-btn">Save Drawing</span>: This downloads a picture (a PNG file) of your art to your computer. You can print it or use it as a background!</p>
+        <p><span class="button-name share-btn">Share Program</span>: This creates a special magic link. You can send this link to anyone, and when they open it, they'll see your code and your drawing!</p>
     </div>
 
-    <h3>The Artist's Blocks (New!)</h3>
+    <h2>How to Create</h2>
+    <p>There are now two ways to make art in EchoDraw.</p>
+    <ol>
+        <li><strong>The Visual Way:</strong> Drag and drop blocks into the editor. You'll see the text code appear in the Code Editor box.</li>
+        <li><strong>The Pro Way:</strong> Click inside the Code Editor and type your commands directly!</li>
+    </ol>
+
+    <h2>Becoming a Pro: The Code Editor</h2>
     <div class="example-box">
-        <p><span class="block-name">set color to [red]</span>: Changes the color of the pen. You can pick from the list!</p>
-        <p><span class="block-name">pen [up/down]</span>: Lifts the pen up so it doesn't draw, or puts it down to start drawing again. This is how you draw separate shapes!</p>
-        <p><span class="block-name">set thickness to [5]</span>: Changes how thick your drawing line is. Try a big number like 20!</p>
+        <p>The Code Editor is your path to becoming an expert. The blocks are a great way to start, but programmers write code with text.</p>
+        <p>You can start a program with blocks, and then click into the editor to change the numbers or colors. Try building a square with blocks, then change <span class="block-name">move forward by 100</span> to <span class="block-name">move forward by 150</span> in the text and run it again. See how it changes? You're coding!</p>
     </div>
 
-    <h3>The Logic Block</h3>
+    <h2>The Blocks Reference</h2>
+    <p>Here are all the blocks you can use.</p>
     <div class="example-box">
-        <p><span class="block-name">repeat</span>: Any blocks you put inside this will happen again and again. It's the best way to make shapes easily.</p>
+        <h3>Drawing Blocks</h3>
+        <p><span class="block-name">move forward</span> & <span class="block-name">turn right</span>: The main blocks for moving and turning the turtle.</p>
+        <h3>Artist's Blocks</h3>
+        <p><span class="block-name">set color</span>, <span class="block-name">set thickness</span>, and <span class="block-name">pen up/down</span>: Use these to change how your lines look and to draw separate shapes.</p>
+        <h3>Logic Blocks</h3>
+        <p><span class="block-name">repeat</span>: The most powerful block for drawing shapes with repeating patterns, like squares or spirographs.</p>
     </div>
-
-
-    <h2>Example Programs to Try</h2>
-
-    <div class="example-box">
-        <h3>Challenge: Draw a Colorful House!</h3>
-        <p>This challenge uses all the new tools. We'll draw a blue square for the house, and then a separate red triangle for the roof.</p>
-        <ol>
-            <li><strong>First, draw the blue square:</strong></li>
-            <li>Use the <span class="block-name">set color to [blue]</span> block.</li>
-            <li>Use the <span class="block-name">set thickness to [10]</span> block to make it chunky.</li>
-            <li>Use a <span class="block-name">repeat 4</span> block to draw a square (move 100, turn 90).</li>
-            <li><strong>Next, get ready to draw the roof:</strong></li>
-            <li>Use the <span class="block-name">pen [up]</span> block to stop drawing.</li>
-            <li>Move to the top corner of the house (you can use <span class="block-name">move forward 100</span>).</li>
-            <li>Use the <span class="block-name">pen [down]</span> block to start drawing again.</li>
-            <li><strong>Finally, draw the red roof:</strong></li>
-            <li>Use the <span class="block-name">set color to [red]</span> block.</li>
-            <li>Use a <span class="block-name">repeat 3</span> block to draw a triangle (move 100, turn 120).</li>
-        </ol>
-        <p>Click "Run Program" and see your house appear!</p>
-    </div>
-
-</body>
+    </body>
 </html>
