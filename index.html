@@ -5,66 +5,77 @@
   <title>EchoDraw</title>
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <style>
-    body { 
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    #header { 
-        width: 100%; 
-        text-align: center; 
+    #header {
+      width: 100%;
+      text-align: center;
     }
-    #main-container { 
-        display: flex; 
-        flex-direction: row; 
-        justify-content: center; 
-        width: 100%; 
+    #main-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      width: 100%;
     }
-    #editor-container { 
-        margin: 10px; 
+    #editor-container {
+      margin: 10px;
     }
-    #display-container { 
-        margin: 10px; 
+    #display-container {
+      margin: 10px;
     }
-    #drawingCanvas { 
-        border: 2px solid #ccc; 
-        border-radius: 4px; 
+    #drawingCanvas {
+      border: 2px solid #ccc;
+      border-radius: 4px;
     }
-    button { 
-        background-color: #4CAF50; 
-        color: white; 
-        padding: 10px 20px; 
-        border: none; 
-        border-radius: 5px; 
-        cursor: pointer; 
-        font-size: 16px; 
-        margin-top: 10px; 
+    #button-bar {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
     }
-    button:hover { 
-        background-color: #45a049; 
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #runBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #saveBtn {
+      background-color: #008CBA;
+      color: white;
+    }
+    #shareBtn {
+      background-color: #f44336;
+      color: white;
     }
     #code-editor {
-        background-color: #2d2d2d;
-        color: #d4d4d4;
-        border: 1px solid #444;
-        border-radius: 4px;
-        padding: 10px;
-        white-space: pre;
-        font-family: "SF Mono", "Menlo", monospace;
-        height: 200px;
-        width: 380px;
-        overflow-y: auto;
-        resize: vertical;
+      background-color: #2d2d2d;
+      color: #d4d4d4;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 10px;
+      white-space: pre;
+      font-family: "SF Mono", "Menlo", monospace;
+      height: 200px;
+      width: 380px;
+      overflow-y: auto;
+      resize: vertical;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <div id="header">
     <h1>EchoDraw</h1>
-    <p>Build with blocks, type in the editor, then click "Run Program" to see your creation!</p>
+    <p>Build with blocks, type in the editor, then run, save, or share your creation!</p>
   </div>
-
   <div id="main-container">
     <div id="editor-container">
       <h2>Visual Editor</h2>
@@ -73,12 +84,15 @@
     <div id="display-container">
       <h2>Drawing Canvas</h2>
       <canvas id="drawingCanvas" width="400" height="400"></canvas>
-      <button onclick="runCode()">Run Program</button>
+      <div id="button-bar">
+        <button id="runBtn" onclick="runCode()">Run Program</button>
+        <button id="saveBtn" onclick="saveDrawing()">Save Drawing</button>
+        <button id="shareBtn" onclick="shareProgram()">Share Program</button>
+      </div>
       <h2>Code Editor</h2>
       <textarea id="code-editor"></textarea>
     </div>
   </div>
-
   <xml id="toolbox" style="display: none">
     <block type="controls_repeat_ext"><value name="TIMES"><shadow type="math_number"><field name="NUM">4</field></shadow></value></block>
     <block type="draw_move_forward"></block>
@@ -88,16 +102,53 @@
     <block type="draw_set_thickness"></block>
     <block type="math_number"><field name="NUM">100</field></block>
   </xml>
-
   <script>
-    // === PART 1: BLOCKLY SETUP ===
+    // The next 4 parts will go inside this script tag.
+        // PART 2: BLOCKLY SETUP - DEFINITIONS AND GENERATORS
     
-    Blockly.Blocks['draw_move_forward'] = { init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("move forward by"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); } };
-    Blockly.Blocks['draw_turn_right'] = { init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("turn right by"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); } };
-    Blockly.Blocks['draw_pen'] = { init: function() { this.appendDummyInput().appendField("pen").appendField(new Blockly.FieldDropdown([["down","DOWN"], ["up","UP"]]), "STATE"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(160); }};
-    Blockly.Blocks['draw_set_color'] = { init: function() { this.appendDummyInput().appendField("set color to").appendField(new Blockly.FieldDropdown([["red","red"], ["blue","blue"], ["green","green"], ["yellow","yellow"], ["black","black"], ["orange","orange"]]), "COLOR"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(160); }};
-    Blockly.Blocks['draw_set_thickness'] = { init: function() { this.appendValueInput("WIDTH").setCheck("Number").appendField("set thickness to"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(160); }};
+    // Block Definitions
+    Blockly.Blocks['draw_move_forward'] = {
+      init: function() {
+        this.appendValueInput("VALUE").setCheck("Number").appendField("move forward by");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(290);
+      }
+    };
+    Blockly.Blocks['draw_turn_right'] = {
+      init: function() {
+        this.appendValueInput("VALUE").setCheck("Number").appendField("turn right by");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(290);
+      }
+    };
+    Blockly.Blocks['draw_pen'] = {
+      init: function() {
+        this.appendDummyInput().appendField("pen").appendField(new Blockly.FieldDropdown([["down","DOWN"], ["up","UP"]]), "STATE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+      }
+    };
+    Blockly.Blocks['draw_set_color'] = {
+      init: function() {
+        this.appendDummyInput().appendField("set color to").appendField(new Blockly.FieldDropdown([["red","red"], ["blue","blue"], ["green","green"], ["yellow","yellow"], ["black","black"], ["orange","orange"]]), "COLOR");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+      }
+    };
+    Blockly.Blocks['draw_set_thickness'] = {
+      init: function() {
+        this.appendValueInput("WIDTH").setCheck("Number").appendField("set thickness to");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+      }
+    };
     
+    // Code Generators
     Blockly.EchoDraw = new Blockly.Generator('EchoDraw');
     Blockly.EchoDraw.forBlock['controls_repeat_ext'] = function(b) { const r = Blockly.EchoDraw.valueToCode(b,'TIMES',0)||'0'; const d = Blockly.EchoDraw.statementToCode(b,'DO'); return `repeat ${r}\n${d}end_repeat\n`; };
     Blockly.EchoDraw.forBlock['draw_move_forward'] = function(b) { const v = Blockly.EchoDraw.valueToCode(b,'VALUE',0)||'0'; return `move_forward ${v}\n`; };
@@ -115,85 +166,132 @@
         document.getElementById('code-editor').value = code;
     });
 
-    // === PART 2: JAVASCRIPT TURTLE & INTERPRETER ===
-    
+        // PART 3: THE TURTLE OBJECT
+
     const canvas = document.getElementById('drawingCanvas');
     const ctx = canvas.getContext('2d');
-    
-    const turtle = {
-        x: 0,
-        y: 0,
-        angle: 0,
-        penDown: true,
-        reset: function() {
-            this.x = canvas.width / 2;
-            this.y = canvas.height / 2;
-            this.angle = -90;
-            this.penDown = true;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 2;
-            ctx.lineCap = "round";
-        },
-        move: function(distance) {
-            const startX = this.x;
-            const startY = this.y;
-            const rad = this.angle * (Math.PI / 180);
-            this.x += Math.cos(rad) * distance;
-            this.y += Math.sin(rad) * distance;
-            if (this.penDown) {
-                ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                ctx.lineTo(this.x, this.y);
-                ctx.stroke();
-            }
-        },
-        turn: function(degrees) {
-            this.angle += degrees;
-        }
-    };
-    
-    function runCode() {
-        turtle.reset();
-        const code = document.getElementById('code-editor').value;
-        const allLines = code.split('\n').filter(line => line.trim());
 
-        function execute(lines) {
-            for (let i = 0; i < lines.length; i++) {
-                const parts = lines[i].trim().split(' ');
-                const command = parts[0];
-                if (command === 'move_forward') { turtle.move(parseInt(parts[1])); }
-                else if (command === 'turn_right') { turtle.turn(parseInt(parts[1])); }
-                else if (command === 'pen_up') { turtle.penDown = false; }
-                else if (command === 'pen_down') { turtle.penDown = true; }
-                else if (command === 'set_color') { ctx.strokeStyle = parts[1]; }
-                else if (command === 'set_thickness') { ctx.lineWidth = parseInt(parts[1]); }
-                else if (command === 'repeat') {
-                    const repeatCount = parseInt(parts[1]);
-                    let loopBody = [];
-                    let nestLevel = 1;
-                    let loopEndIndex = -1;
-                    for (let j = i + 1; j < lines.length; j++) {
-                        if (lines[j].trim().startsWith('repeat')) nestLevel++;
-                        if (lines[j].trim() === 'end_repeat') nestLevel--;
-                        if (nestLevel === 0) {
-                            loopEndIndex = j;
-                            break;
-                        }
-                    }
-                    if (loopEndIndex !== -1) {
-                        loopBody = lines.slice(i + 1, loopEndIndex);
-                        for (let k = 0; k < repeatCount; k++) {
-                            execute(loopBody);
-                        }
-                        i = loopEndIndex;
-                    }
-                }
-            }
+    const turtle = {
+      x: 0,
+      y: 0,
+      angle: 0,
+      penDown: true,
+
+      reset: function() {
+        this.x = canvas.width / 2;
+        this.y = canvas.height / 2;
+        this.angle = -90;
+        this.penDown = true;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+      },
+
+      move: function(distance) {
+        const startX = this.x;
+        const startY = this.y;
+        const rad = this.angle * (Math.PI / 180);
+        this.x += Math.cos(rad) * distance;
+        this.y += Math.sin(rad) * distance;
+        if (this.penDown) {
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.lineTo(this.x, this.y);
+          ctx.stroke();
         }
-        
-        execute(allLines);
+      },
+
+      turn: function(degrees) {
+        this.angle += degrees;
+      }
+    };
+
+        // PART 4: THE INTERPRETER ENGINE
+
+    function runCode() {
+      turtle.reset();
+      const code = document.getElementById('code-editor').value;
+      const allLines = code.split('\n').filter(line => line.trim());
+
+      function execute(lines) {
+        for (let i = 0; i < lines.length; i++) {
+          const parts = lines[i].trim().split(' ');
+          const command = parts[0];
+
+          if (command === 'move_forward') {
+            turtle.move(parseInt(parts[1]));
+          } else if (command === 'turn_right') {
+            turtle.turn(parseInt(parts[1]));
+          } else if (command === 'pen_up') {
+            turtle.penDown = false;
+          } else if (command === 'pen_down') {
+            turtle.penDown = true;
+          } else if (command === 'set_color') {
+            ctx.strokeStyle = parts[1];
+          } else if (command === 'set_thickness') {
+            ctx.lineWidth = parseInt(parts[1]);
+          } else if (command === 'repeat') {
+            const repeatCount = parseInt(parts[1]);
+            let loopBody = [];
+            let nestLevel = 1;
+            let loopEndIndex = -1;
+            for (let j = i + 1; j < lines.length; j++) {
+              if (lines[j].trim().startsWith('repeat')) {
+                nestLevel++;
+              }
+              if (lines[j].trim() === 'end_repeat') {
+                nestLevel--;
+              }
+              if (nestLevel === 0) {
+                loopEndIndex = j;
+                break;
+              }
+            }
+            if (loopEndIndex !== -1) {
+              loopBody = lines.slice(i + 1, loopEndIndex);
+              for (let k = 0; k < repeatCount; k++) {
+                execute(loopBody);
+              }
+              i = loopEndIndex;
+            }
+          }
+        }
+      }
+      
+      execute(allLines);
     }
+
+        // PART 5: THE CREATOR'S TOOLKIT
+
+    function saveDrawing() {
+      const link = document.createElement('a');
+      link.download = 'echodraw_creation.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function shareProgram() {
+      const code = document.getElementById('code-editor').value;
+      const encodedCode = btoa(code);
+      const baseURL = window.location.origin + window.location.pathname;
+      const shareableLink = baseURL + '#code=' + encodedCode;
+      prompt("Copy this link to share your program:", shareableLink);
+    }
+
+    window.onload = function() {
+      if (window.location.hash.startsWith('#code=')) {
+        try {
+          const encodedCode = window.location.hash.substring(6);
+          const decodedCode = atob(encodedCode);
+          document.getElementById('code-editor').value = decodedCode;
+          runCode();
+        } catch (e) {
+          console.error("Failed to decode shared program:", e);
+        }
+      }
+    };
+
   </script>
 </body>
 </html>
