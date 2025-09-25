@@ -11,23 +11,23 @@
             max-width: 800px;
             color: #333;
         }
-        h1, h2 { 
+        h1, h2, h3 { 
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
         }
-        code {
+        .block-name {
             background-color: #f4f4f4;
             padding: 2px 6px;
             border-radius: 4px;
             font-family: "SF Mono", "Menlo", monospace;
+            font-weight: bold;
         }
-        .code-block {
-            background-color: #f4f4f4;
+        .example-box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
             padding: 15px;
-            border-radius: 5px;
-            white-space: pre;
-            font-family: "SF Mono", "Menlo", monospace;
-            overflow-x: auto;
+            border-radius: 8px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -35,47 +35,58 @@
 
     <h1>Welcome to EchoDraw!</h1>
     <p>
-        EchoDraw is the easiest programming language ever, designed for kids! You can use it to print messages and draw cool shapes.
+        Hi! This is the instruction manual for EchoDraw, the programming language I made for you to learn and have fun with.
     </p>
 
     <h2>How to Use EchoDraw</h2>
     <ol>
-        <li>Open the <code>index.html</code> file in a web browser to use the block editor.</li>
-        <li>Drag and drop blocks to build your program.</li>
-        <li>As you add blocks, the text-based code will be generated (we will build this part next).</li>
-        <li>Copy the text-based code and paste it inside the triple quotes in the <code>run_echodraw.py</code> file.</li>
-        <li>Run the program from your Terminal to see your creation!</li>
+        <li>On the left side of the screen, you'll see a list of code blocks.</li>
+        <li>Drag the blocks you want into the big white space to build a program. They snap together like puzzle pieces!</li>
+        <li>When you think your program is ready, click the big green <strong>"Run Program"</strong> button.</li>
+        <li>Watch the right side of the screen to see a turtle draw what you programmed!</li>
     </ol>
 
-    <h2>EchoDraw Commands</h2>
-    <p>Here are all the commands in EchoDraw:</p>
+    <h2>The Blocks</h2>
+    <p>These are the puzzle pieces you can use to give the computer instructions.</p>
 
-    <h3><code>print [message]</code></h3>
-    <ul>
-        <li><strong>What it does:</strong> Displays a message in the Terminal.</li>
-        <li><strong>Example:</strong> <code>print Hello there!</code></li>
-    </ul>
+    <div class="example-box">
+        <h3>The <span class="block-name">move forward</span> Block</h3>
+        <p>This tells the turtle to move forward and draw a line. You can change the number to tell it how far to move.</p>
+    </div>
 
-    <h3><code>move_forward [pixels]</code></h3>
-    <ul>
-        <li><strong>What it does:</strong> Moves the turtle forward by a certain number of pixels.</li>
-        <li><strong>Example:</strong> <code>move_forward 50</code></li>
-    </ul>
+    <div class="example-box">
+        <h3>The <span class="block-name">turn right</span> Block</h3>
+        <p>This tells the turtle to turn, but it stays in the same spot. You can change the number to tell it how many degrees to turn (90 is a perfect corner, like on a square).</p>
+    </div>
 
-    <h3><code>turn_right [degrees]</code></h3>
-    <ul>
-        <li><strong>What it does:</strong> Turns the turtle to the right by a certain number of degrees.</li>
-        <li><strong>Example:</strong> <code>turn_right 90</code></li>
-    </ul>
+    <div class="example-box">
+        <h3>The <span class="block-name">repeat</span> Block</h3>
+        <p>This is the most powerful block! Any blocks you put <strong>inside</strong> its C-shape will happen again and again. This is perfect for drawing shapes that have lots of the same sides.</p>
+    </div>
 
-    <h2>Example Programs</h2>
+    <h2>Example Programs to Try</h2>
 
-    <h3>Drawing a Triangle</h3>
-    <div class="code-block">move_forward 100
-turn_right 120
-move_forward 100
-turn_right 120
-move_forward 100</div>
+    <div class="example-box">
+        <h3>Challenge 1: Draw a Square</h3>
+        <p>This is the best way to use the repeat block. A square has 4 sides and 4 corners, so we repeat the steps 4 times!</p>
+        <ol>
+            <li>Get a <span class="block-name">repeat</span> block and make sure the number says 4.</li>
+            <li>Inside it, put a <span class="block-name">move forward by 100</span> block.</li>
+            <li>Under that, still inside the repeat, put a <span class="block-name">turn right by 90</span> block.</li>
+            <li>Click "Run Program" and watch it go!</li>
+        </ol>
+    </div>
+    
+    <div class="example-box">
+        <h3>Challenge 2: Draw a Star! (Hard)</h3>
+        <p>Think you can make a star? The secret is in the angle you turn!</p>
+        <ol>
+            <li>Get a <span class="block-name">repeat</span> block and set it to 5.</li>
+            <li>Inside, use <span class="block-name">move forward by 150</span>.</li>
+            <li>Then use <span class="block-name">turn right by 144</span>. (It's a weird number, but it works!)</li>
+        </ol>
+    </div>
+
 
 </body>
 </html>
