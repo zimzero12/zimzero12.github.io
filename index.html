@@ -5,6 +5,7 @@
   <title>EchoDraw</title>
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <style>
+    /* CSS Styles are unchanged */
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; flex-direction: column; align-items: center; }
     #header { width: 100%; text-align: center; }
     #main-container { display: flex; flex-direction: row; justify-content: center; width: 100%; }
@@ -26,7 +27,7 @@
   <div id="main-container">
     <div id="editor-container">
       <h2>Visual Editor</h2>
-      <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+      <div id="blocklyDiv" style="height: 520px; width: 600px;"></div>
     </div>
     <div id="display-container">
       <h2>Drawing Canvas</h2>
@@ -38,23 +39,40 @@
   </div>
 
   <xml id="toolbox" style="display: none">
+    <!-- Logic Blocks -->
     <block type="controls_repeat_ext"><value name="TIMES"><shadow type="math_number"><field name="NUM">4</field></shadow></value></block>
+    <!-- Drawing Blocks -->
     <block type="draw_move_forward"></block>
     <block type="draw_turn_right"></block>
+    <!-- NEW Artist Blocks -->
+    <block type="draw_pen"></block>
+    <block type="draw_set_color"></block>
+    <block type="draw_set_thickness"></block>
+    <!-- Value Block -->
     <block type="math_number"><field name="NUM">100</field></block>
   </xml>
 
   <script>
     // === PART 1: BLOCKLY SETUP (Blocks & Generator) ===
 
+    // --- Block Definitions ---
     Blockly.Blocks['draw_move_forward'] = { init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("move forward by"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); } };
     Blockly.Blocks['draw_turn_right'] = { init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("turn right by"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); } };
-    
+    // NEW BLOCK DEFINITIONS
+    Blockly.Blocks['draw_pen'] = { init: function() { this.appendDummyInput().appendField("pen").appendField(new Blockly.FieldDropdown([["down","DOWN"], ["up","UP"]]), "STATE"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(160); }};
+    Blockly.Blocks['draw_set_color'] = { init: function() { this.appendDummyInput().appendField("set color to").appendField(new Blockly.FieldDropdown([["red","red"], ["blue","blue"], ["green","green"], ["yellow","yellow"], ["black","black"], ["orange","orange"]]), "COLOR"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(160); }};
+    Blockly.Blocks['draw_set_thickness'] = { init: function() { this.appendValueInput("WIDTH").setCheck("Number").appendField("set thickness to"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(160); }};
+
+    // --- Generator Setup ---
     Blockly.EchoDraw = new Blockly.Generator('EchoDraw');
     Blockly.EchoDraw.forBlock['controls_repeat_ext'] = function(b) { const r = Blockly.EchoDraw.valueToCode(b,'TIMES',0)||'0'; const d = Blockly.EchoDraw.statementToCode(b,'DO'); return `repeat ${r}\n${d}end_repeat\n`; };
     Blockly.EchoDraw.forBlock['draw_move_forward'] = function(b) { const v = Blockly.EchoDraw.valueToCode(b,'VALUE',0)||'0'; return `move_forward ${v}\n`; };
     Blockly.EchoDraw.forBlock['draw_turn_right'] = function(b) { const v = Blockly.EchoDraw.valueToCode(b,'VALUE',0)||'0'; return `turn_right ${v}\n`; };
     Blockly.EchoDraw.forBlock['math_number'] = function(b) { return [String(b.getFieldValue('NUM')), 0]; };
+    // NEW GENERATOR RULES
+    Blockly.EchoDraw.forBlock['draw_pen'] = function(b) { const state = b.getFieldValue('STATE'); return state === 'UP' ? 'pen_up\n' : 'pen_down\n'; };
+    Blockly.EchoDraw.forBlock['draw_set_color'] = function(b) { const color = b.getFieldValue('COLOR'); return `set_color ${color}\n`; };
+    Blockly.EchoDraw.forBlock['draw_set_thickness'] = function(b) { const width = Blockly.EchoDraw.valueToCode(b,'WIDTH',0)||'1'; return `set_thickness ${width}\n`; };
     Blockly.EchoDraw.scrub_ = function(b, c) { const n = b.nextConnection && b.nextConnection.targetBlock(); return c + Blockly.EchoDraw.blockToCode(n); };
 
     const workspace = Blockly.inject('blocklyDiv', { toolbox: document.getElementById('toolbox') });
@@ -65,28 +83,23 @@
     const canvas = document.getElementById('drawingCanvas');
     const ctx = canvas.getContext('2d');
     
-    // The JavaScript "Turtle" object
     const turtle = {
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-        angle: -90, // Start facing up
-        penDown: true,
+        x: 0, y: 0, angle: 0, penDown: true,
         reset: function() {
             this.x = canvas.width / 2;
             this.y = canvas.height / 2;
-            this.angle = -90;
+            this.angle = -90; // Start facing up
             this.penDown = true;
-            // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Begin the drawing path
             ctx.beginPath();
             ctx.moveTo(this.x, this.y);
+            ctx.strokeStyle = "black"; // Default color
+            ctx.lineWidth = 2;       // Default thickness
         },
         move: function(distance) {
-            const rad = this.angle * (Math.PI / 180); // Convert angle to radians
+            const rad = this.angle * (Math.PI / 180);
             const newX = this.x + Math.cos(rad) * distance;
             const newY = this.y + Math.sin(rad) * distance;
-            
             if (this.penDown) {
                 ctx.lineTo(newX, newY);
                 ctx.stroke();
@@ -96,15 +109,11 @@
             this.x = newX;
             this.y = newY;
         },
-        turn: function(degrees) {
-            this.angle += degrees;
-        }
+        turn: function(degrees) { this.angle += degrees; }
     };
     
-    // The new JavaScript Interpreter
     function runCode() {
         turtle.reset();
-        
         const code = Blockly.EchoDraw.workspaceToCode(workspace);
         const lines = code.split('\n');
         
@@ -114,35 +123,32 @@
                 const parts = line.split(' ');
                 const command = parts[0];
 
-                if (command === 'move_forward') {
-                    turtle.move(parseInt(parts[1]));
-                } else if (command === 'turn_right') {
-                    turtle.turn(parseInt(parts[1]));
-                } else if (command === 'repeat') {
+                if (command === 'move_forward') { turtle.move(parseInt(parts[1])); }
+                else if (command === 'turn_right') { turtle.turn(parseInt(parts[1])); }
+                // NEW INTERPRETER LOGIC
+                else if (command === 'pen_up') { turtle.penDown = false; }
+                else if (command === 'pen_down') { turtle.penDown = true; ctx.moveTo(turtle.x, turtle.y); ctx.beginPath(); } // Start a new line path
+                else if (command === 'set_color') { ctx.stroke(); ctx.beginPath(); ctx.strokeStyle = parts[1]; } // Finish old line, start new one with new color
+                else if (command === 'set_thickness') { ctx.stroke(); ctx.beginPath(); ctx.lineWidth = parseInt(parts[1]); } // Finish old line, start new one with new thickness
+                else if (command === 'repeat') {
                     const repeatCount = parseInt(parts[1]);
                     const loopBody = [];
                     let nestLevel = 1;
-                    // Find the loop body
                     for (let j = i + 1; j < lines.length; j++) {
                         const loopLine = lines[j].trim();
-                        if (loopLine === 'repeat') nestLevel++;
+                        if (loopLine.startsWith('repeat')) nestLevel++;
                         if (loopLine === 'end_repeat') nestLevel--;
-                        if (nestLevel === 0) {
-                            i = j; // Jump past the loop
-                            break;
-                        }
+                        if (nestLevel === 0) { i = j; break; }
                         loopBody.push(loopLine);
                     }
-                    // Execute the loop
-                    for (let k = 0; k < repeatCount; k++) {
-                        execute(loopBody);
-                    }
+                    for (let k = 0; k < repeatCount; k++) { execute(loopBody); }
                 }
             }
+            ctx.stroke(); // Make sure the very last line is drawn
         }
-        
         execute(lines);
     }
   </script>
 </body>
+</html>
 </html>
