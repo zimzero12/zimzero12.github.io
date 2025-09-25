@@ -42,42 +42,49 @@
     </style>
 </head>
 <body>
-    <!-- The main content will go in Part 2 -->
-    <h1>Welcome to EchoDraw!</h1>
+        <h1>Welcome to EchoDraw!</h1>
     <p>
-        This is the instruction manual for EchoDraw. I've added some powerful new tools to help you save, share, and even become a pro coder!
+        This is the instruction manual for EchoDraw. It contains a guide for beginners and a full language specification for experts.
     </p>
 
-    <h2>The Main Buttons</h2>
-    <p>You now have three powerful buttons to control your projects.</p>
+    <!-- SECTION 1: USER GUIDE -->
+
+    <h2>User Guide for Creators</h2>
+    <p>This guide explains how to use the EchoDraw application.</p>
+    
+    <h3>The Main Buttons</h3>
     <div class="example-box">
-        <p><span class="button-name run-btn">Run Program</span>: Click this to run the code in the editor and see your turtle draw on the canvas.</p>
-        <p><span class="button-name save-btn">Save Drawing</span>: This downloads a picture (a PNG file) of your art to your computer. You can print it or use it as a background!</p>
-        <p><span class="button-name share-btn">Share Program</span>: This creates a special magic link. You can send this link to anyone, and when they open it, they'll see your code and your drawing!</p>
+        <p><span class="button-name run-btn">Run Program</span>: Executes the code in the editor and draws the result on the canvas.</p>
+        <p><span class="button-name save-btn">Save Drawing</span>: Downloads a PNG image of the canvas.</p>
+        <p><span class="button-name share-btn">Share Program</span>: Generates a unique URL that contains the current program, allowing anyone with the link to load, view, and run your code.</p>
     </div>
 
-    <h2>How to Create</h2>
-    <p>There are now two ways to make art in EchoDraw.</p>
+    <h3>How to Create</h3>
     <ol>
-        <li><strong>The Visual Way:</strong> Drag and drop blocks into the editor. You'll see the text code appear in the Code Editor box.</li>
-        <li><strong>The Pro Way:</strong> Click inside the Code Editor and type your commands directly!</li>
+        <li><strong>The Visual Way:</strong> Drag and drop blocks. The text code will be automatically generated in the Code Editor.</li>
+        <li><strong>The Pro Way:</strong> Type commands directly into the Code Editor. This gives you full control.</li>
     </ol>
 
-    <h2>Becoming a Pro: The Code Editor</h2>
-    <div class="example-box">
-        <p>The Code Editor is your path to becoming an expert. The blocks are a great way to start, but programmers write code with text.</p>
-        <p>You can start a program with blocks, and then click into the editor to change the numbers or colors. Try building a square with blocks, then change <span class="block-name">move forward by 100</span> to <span class="block-name">move forward by 150</span> in the text and run it again. See how it changes? You're coding!</p>
-    </div>
+    <!-- SECTION 2: LANGUAGE SPECIFICATION -->
 
-    <h2>The Blocks Reference</h2>
-    <p>Here are all the blocks you can use.</p>
+    <h2>EchoDraw Language Specification</h2>
+    <p>
+        EchoDraw is a procedural, imperative, turtle graphics language. The interpreter processes commands line-by-line, from top to bottom. The language is case-sensitive and whitespace-sensitive for command arguments.
+    </p>
+
+    <h3>1. State Control Commands</h3>
+    <p>These commands modify the state of the turtle (its position, angle, and drawing properties).</p>
     <div class="example-box">
-        <h3>Drawing Blocks</h3>
-        <p><span class="block-name">move forward</span> & <span class="block-name">turn right</span>: The main blocks for moving and turning the turtle.</p>
-        <h3>Artist's Blocks</h3>
-        <p><span class="block-name">set color</span>, <span class="block-name">set thickness</span>, and <span class="block-name">pen up/down</span>: Use these to change how your lines look and to draw separate shapes.</p>
-        <h3>Logic Blocks</h3>
-        <p><span class="block-name">repeat</span>: The most powerful block for drawing shapes with repeating patterns, like squares or spirographs.</p>
-    </div>
+        <h4><span class="block-name">move_forward `distance`</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Moves the turtle forward from its current position in the direction it is facing. If the pen is down, it draws a line.</li>
+            <li><strong>Argument:</strong> `distance` (integer). The number of pixels to move.</li>
+            <li><strong>Example:</strong> <code>move_forward 150</code></li>
+        </ul>
+        
+        <h4><span class="block-name">turn_right `degrees`</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Rotates the turtle clockwise on its current position. Does not draw a line.</li>
+            <li><strong>Argument:</strong> `degrees` (integer). The angle of rotation in degrees. Negative values produce a counter-clockwise turn.</li>
     </body>
 </html>
