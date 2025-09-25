@@ -42,7 +42,7 @@
     </style>
 </head>
 <body>
-            <h1>Welcome to EchoDraw!</h1>
+                <h1>Welcome to EchoDraw!</h1>
     <p>
         This is the instruction manual for EchoDraw. It contains a guide for beginners and a full language specification for experts.
     </p>
@@ -52,28 +52,32 @@
     <h2>User Guide for Creators</h2>
     <p>This guide explains how to use the EchoDraw application.</p>
 
-    <h3>The Main Buttons</h3>
-    <div class="example-box">
-        <p><span class="button-name run-btn">Run Program</span>, <span class="button-name save-btn">Save Drawing</span>, and <span class="button-name share-btn">Share Program</span>: These buttons let you run your code, save your art as an image, and create a special link to share your program with anyone.</p>
-    </div>
-
     <h3>The Blocks Reference</h3>
     <div class="example-box">
-        <h4>Drawing & Artist Blocks</h4>
-        <p>Use blocks like <span class="block-name">move forward</span>, <span class="block-name">turn right</span>, <span class="block-name">set color</span>, and <span class="block-name">pen up/down</span> to control the turtle and create your art.</p>
+        <h4>Events (New!)</h4>
+        <p>
+            The new <span class="block-name">Events</span> category is the key to making interactive programs and games! Blocks in this category are special "hat" blocks. They don't connect on top of anything else; they are the start of their own script.
+        </p>
+        <p>
+            Use the <span class="block-name">when key pressed</span> block to make your program listen to the keyboard. Any code you put under this hat will only run when you press that specific key. Try making an Etch A Sketch by moving the turtle 10 pixels for each arrow key!
+        </p>
         
-        <h4>Logic Blocks</h4>
-        <p>The <span class="block-name">repeat</span> block is great for drawing shapes that have repeating sides, like squares or stars.</p>
+        <h4>My Blocks</h4>
+        <p>
+            Use the "My Blocks" category to create your own custom commands. This is great for organizing your code and reusing parts you build often, like a block to draw a house or a star.
+        </p>
 
-        <h4>My Blocks (New!)</h4>
-        <p>This is the most powerful feature! In the "My Blocks" category, you can click "Make a Block" to invent your own commands. If you have a set of blocks you use all the time (like drawing a square), you can give it a name like "draw_square". A new <span class="block-name">draw_square</span> block will appear that you can use anywhere, as many times as you want!</p>
+        <h4>Other Blocks</h4>
+        <p>
+            Use the **Drawing**, **Artist**, and **Logic** blocks to control the turtle, change its appearance, and create repeating patterns.
+        </p>
     </div>
 
     <!-- SECTION 2: LANGUAGE SPECIFICATION -->
 
     <h2>EchoDraw Language Specification</h2>
     <p>
-        EchoDraw is a procedural, imperative, turtle graphics language. The interpreter performs a pre-pass to register all function definitions before executing the main program logic line-by-line.
+        EchoDraw is a procedural, imperative, event-driven, turtle graphics language. The interpreter performs a pre-pass to register all function and event definitions before executing the main program logic.
     </p>
 
     <h3>1. State Control Commands</h3>
@@ -87,41 +91,38 @@
     
     <h3>2. Pen Attribute Commands</h3>
     <div class="example-box">
-        <h4><span class="block-name">pen_up</span></h4>
-        <ul><li>Lifts the pen; movement will not draw a line.</li></ul>
-        
-        <h4><span class="block-name">pen_down</span></h4>
-        <ul><li>Lowers the pen; movement will draw a line.</li></ul>
+        <h4><span class="block-name">pen_up</span> / <span class="block-name">pen_down</span></h4>
+        <ul><li>Lifts or lowers the pen.</li></ul>
         
         <h4><span class="block-name">set_color `color`</span></h4>
         <ul><li>Sets the line color (e.g., `set_color red`).</li></ul>
         
         <h4><span class="block-name">set_thickness `width`</span></h4>
-        <ul><li>Sets the line thickness in integer pixels (e.g., `set_thickness 5`).</li></ul>
+        <ul><li>Sets the line thickness in integer pixels.</li></ul>
     </div>
     
     <h3>3. Flow Control Commands</h3>
     <div class="example-box">
         <h4><span class="block-name">repeat `count`</span> ... <span class="block-name">end_repeat</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Executes the enclosed block of code a specified number of times. Can be nested.</li>
-            <li><strong>Example:</strong><br><code>repeat 4<br>&nbsp;&nbsp;move_forward 50<br>end_repeat</code></li>
-        </ul>
+        <ul><li>Executes the enclosed block of code a specified number of times.</li></ul>
     </div>
 
-    <h3>4. Function Definition & Control (New)</h3>
+    <h3>4. Function Definition Commands</h3>
     <div class="example-box">
-        <h4><span class="block-name">define `function_name`</span> ... <span class="block-name">end_define</span></h4>
+        <h4><span class="block-name">define `name`</span> ... <span class="block-name">end_define</span></h4>
+        <ul><li>Defines a new command with the specified `name`.</li></ul>
+        
+        <h4><span class="block-name">call `name`</span></h4>
+        <ul><li>Executes a previously defined function.</li></ul>
+    </div>
+    
+    <h3>5. Event Handling Commands (New)</h3>
+    <div class="example-box">
+        <h4><span class="block-name">on_key `key_name`</span> ... <span class="block-name">end_on_key</span></h4>
         <ul>
-            <li><strong>Description:</strong> Defines a new custom command. The `function_name` must be a single word (no spaces). All code between `define` and `end_define` is stored as the body of the function. These blocks are not executed immediately.</li>
-            <li><strong>Argument:</strong> `function_name` (string).</li>
-        </ul>
-
-        <h4><span class="block-name">call `function_name`</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Executes the body of a previously defined function. The interpreter will jump to the function's code, execute it, and then return to the next line in the main program.</li>
-            <li><strong>Argument:</strong> `function_name` (string).</li>
-            <li><strong>Example:</strong><br><code>define draw_square<br>&nbsp;&nbsp;repeat 4<br>&nbsp;&nbsp;&nbsp;&nbsp;move_forward 100<br>&nbsp;&nbsp;&nbsp;&nbsp;turn_right 90<br>&nbsp;&nbsp;end_repeat<br>end_define<br><br>call draw_square</code></li>
+            <li><strong>Description:</strong> Defines an event handler. The enclosed block of code is not executed immediately. Instead, it is registered and will only execute when the corresponding keyboard key is pressed. The `Run Program` button must be clicked once to activate these listeners.</li>
+            <li><strong>Argument:</strong> `key_name` (string). The specific key to listen for. Valid values are `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight`, and `Space`.</li>
+            <li><strong>Example:</strong><br><code>on_key ArrowUp<br>&nbsp;&nbsp;move_forward 10<br>end_on_key<br><br>on_key ArrowLeft<br>&nbsp;&nbsp;turn_right -10<br>end_on_key</code></li>
         </ul>
     </div>
     </body>
