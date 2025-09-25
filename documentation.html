@@ -63,7 +63,7 @@
     <ol>
         <li><strong>The Visual Way:</strong> Drag and drop blocks. The text code will be automatically generated in the Code Editor.</li>
         <li><strong>The Pro Way:</strong> Type commands directly into the Code Editor. This gives you full control.</li>
-    </ol>
+    ol>
 
     <!-- SECTION 2: LANGUAGE SPECIFICATION -->
 
@@ -73,7 +73,7 @@
     </p>
 
     <h3>1. State Control Commands</h3>
-    <p>These commands modify the state of the turtle (its position, angle, and drawing properties).</p>
+    <p>These commands modify the state of the turtle (its position and angle).</p>
     <div class="example-box">
         <h4><span class="block-name">move_forward `distance`</span></h4>
         <ul>
@@ -84,7 +84,57 @@
         
         <h4><span class="block-name">turn_right `degrees`</span></h4>
         <ul>
-            <li><strong>Description:</strong> Rotates the turtle clockwise on its current position. Does not draw a line.</li>
+            <li><strong>Description:</strong> Rotates the turtle clockwise from its current orientation. Does not draw a line.</li>
             <li><strong>Argument:</strong> `degrees` (integer). The angle of rotation in degrees. Negative values produce a counter-clockwise turn.</li>
+            <li><strong>Example:</strong> <code>turn_right 90</code></li>
+        </ul>
+    </div>
+    
+    <h3>2. Pen Attribute Commands</h3>
+    <p>These commands control the properties of the drawing pen.</p>
+    <div class="example-box">
+        <h4><span class="block-name">pen_up</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Lifts the pen from the canvas. Subsequent `move_forward` commands will change the turtle's position without drawing a line.</li>
+            <li><strong>Arguments:</strong> None.</li>
+        </ul>
+        
+        <h4><span class="block-name">pen_down</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Lowers the pen onto the canvas. Subsequent `move_forward` commands will draw a line.</li>
+            <li><strong>Arguments:</strong> None.</li>
+        </ul>
+        
+        <h4><span class="block-name">set_color `color`</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Sets the stroke color for all subsequent lines. The initial color is `black`.</li>
+            <li><strong>Argument:</strong> `color` (string). Accepts standard CSS color names (e.g., `red`, `blue`) without quotes.</li>
+            <li><strong>Example:</strong> <code>set_color orange</code></li>
+        </ul>
+        
+        <h4><span class="block-name">set_thickness `width`</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Sets the stroke width for all subsequent lines. The initial thickness is `2`.</li>
+            <li><strong>Argument:</strong> `width` (integer). The thickness of the line in pixels.</li>
+            <li><strong>Example:</strong> <code>set_thickness 10</code></li>
+        </ul>
+    </div>
+    
+    <h3>3. Flow Control Commands</h3>
+    <p>These commands control the order in which code is executed.</p>
+    <div class="example-box">
+        <h4><span class="block-name">repeat `count`</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Marks the beginning of a loop block. The lines of code between this command and its matching `end_repeat` will be executed a specified number of times. Loops can be nested.</li>
+            <li><strong>Argument:</strong> `count` (integer). The number of times to execute the loop body.</li>
+            <li><strong>Example:</strong> <code>repeat 4</code></li>
+        </ul>
+        
+        <h4><span class="block-name">end_repeat</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Marks the end of a `repeat` loop block. Must have a corresponding `repeat` command before it.</li>
+            <li><strong>Arguments:</strong> None.</li>
+        </ul>
+    </div>
     </body>
 </html>
