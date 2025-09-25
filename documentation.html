@@ -42,7 +42,7 @@
     </style>
 </head>
 <body>
-        <h1>Welcome to EchoDraw!</h1>
+            <h1>Welcome to EchoDraw!</h1>
     <p>
         This is the instruction manual for EchoDraw. It contains a guide for beginners and a full language specification for experts.
     </p>
@@ -51,89 +51,77 @@
 
     <h2>User Guide for Creators</h2>
     <p>This guide explains how to use the EchoDraw application.</p>
-    
+
     <h3>The Main Buttons</h3>
     <div class="example-box">
-        <p><span class="button-name run-btn">Run Program</span>: Executes the code in the editor and draws the result on the canvas.</p>
-        <p><span class="button-name save-btn">Save Drawing</span>: Downloads a PNG image of the canvas.</p>
-        <p><span class="button-name share-btn">Share Program</span>: Generates a unique URL that contains the current program, allowing anyone with the link to load, view, and run your code.</p>
+        <p><span class="button-name run-btn">Run Program</span>, <span class="button-name save-btn">Save Drawing</span>, and <span class="button-name share-btn">Share Program</span>: These buttons let you run your code, save your art as an image, and create a special link to share your program with anyone.</p>
     </div>
 
-    <h3>How to Create</h3>
-    <ol>
-        <li><strong>The Visual Way:</strong> Drag and drop blocks. The text code will be automatically generated in the Code Editor.</li>
-        <li><strong>The Pro Way:</strong> Type commands directly into the Code Editor. This gives you full control.</li>
-    ol>
+    <h3>The Blocks Reference</h3>
+    <div class="example-box">
+        <h4>Drawing & Artist Blocks</h4>
+        <p>Use blocks like <span class="block-name">move forward</span>, <span class="block-name">turn right</span>, <span class="block-name">set color</span>, and <span class="block-name">pen up/down</span> to control the turtle and create your art.</p>
+        
+        <h4>Logic Blocks</h4>
+        <p>The <span class="block-name">repeat</span> block is great for drawing shapes that have repeating sides, like squares or stars.</p>
+
+        <h4>My Blocks (New!)</h4>
+        <p>This is the most powerful feature! In the "My Blocks" category, you can click "Make a Block" to invent your own commands. If you have a set of blocks you use all the time (like drawing a square), you can give it a name like "draw_square". A new <span class="block-name">draw_square</span> block will appear that you can use anywhere, as many times as you want!</p>
+    </div>
 
     <!-- SECTION 2: LANGUAGE SPECIFICATION -->
 
     <h2>EchoDraw Language Specification</h2>
     <p>
-        EchoDraw is a procedural, imperative, turtle graphics language. The interpreter processes commands line-by-line, from top to bottom. The language is case-sensitive and whitespace-sensitive for command arguments.
+        EchoDraw is a procedural, imperative, turtle graphics language. The interpreter performs a pre-pass to register all function definitions before executing the main program logic line-by-line.
     </p>
 
     <h3>1. State Control Commands</h3>
-    <p>These commands modify the state of the turtle (its position and angle).</p>
     <div class="example-box">
         <h4><span class="block-name">move_forward `distance`</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Moves the turtle forward from its current position in the direction it is facing. If the pen is down, it draws a line.</li>
-            <li><strong>Argument:</strong> `distance` (integer). The number of pixels to move.</li>
-            <li><strong>Example:</strong> <code>move_forward 150</code></li>
-        </ul>
+        <ul><li>Moves the turtle forward by an integer number of pixels.</li></ul>
         
         <h4><span class="block-name">turn_right `degrees`</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Rotates the turtle clockwise from its current orientation. Does not draw a line.</li>
-            <li><strong>Argument:</strong> `degrees` (integer). The angle of rotation in degrees. Negative values produce a counter-clockwise turn.</li>
-            <li><strong>Example:</strong> <code>turn_right 90</code></li>
-        </ul>
+        <ul><li>Rotates the turtle clockwise by an integer number of degrees.</li></ul>
     </div>
     
     <h3>2. Pen Attribute Commands</h3>
-    <p>These commands control the properties of the drawing pen.</p>
     <div class="example-box">
         <h4><span class="block-name">pen_up</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Lifts the pen from the canvas. Subsequent `move_forward` commands will change the turtle's position without drawing a line.</li>
-            <li><strong>Arguments:</strong> None.</li>
-        </ul>
+        <ul><li>Lifts the pen; movement will not draw a line.</li></ul>
         
         <h4><span class="block-name">pen_down</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Lowers the pen onto the canvas. Subsequent `move_forward` commands will draw a line.</li>
-            <li><strong>Arguments:</strong> None.</li>
-        </ul>
+        <ul><li>Lowers the pen; movement will draw a line.</li></ul>
         
         <h4><span class="block-name">set_color `color`</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Sets the stroke color for all subsequent lines. The initial color is `black`.</li>
-            <li><strong>Argument:</strong> `color` (string). Accepts standard CSS color names (e.g., `red`, `blue`) without quotes.</li>
-            <li><strong>Example:</strong> <code>set_color orange</code></li>
-        </ul>
+        <ul><li>Sets the line color (e.g., `set_color red`).</li></ul>
         
         <h4><span class="block-name">set_thickness `width`</span></h4>
-        <ul>
-            <li><strong>Description:</strong> Sets the stroke width for all subsequent lines. The initial thickness is `2`.</li>
-            <li><strong>Argument:</strong> `width` (integer). The thickness of the line in pixels.</li>
-            <li><strong>Example:</strong> <code>set_thickness 10</code></li>
-        </ul>
+        <ul><li>Sets the line thickness in integer pixels (e.g., `set_thickness 5`).</li></ul>
     </div>
     
     <h3>3. Flow Control Commands</h3>
-    <p>These commands control the order in which code is executed.</p>
     <div class="example-box">
-        <h4><span class="block-name">repeat `count`</span></h4>
+        <h4><span class="block-name">repeat `count`</span> ... <span class="block-name">end_repeat</span></h4>
         <ul>
-            <li><strong>Description:</strong> Marks the beginning of a loop block. The lines of code between this command and its matching `end_repeat` will be executed a specified number of times. Loops can be nested.</li>
-            <li><strong>Argument:</strong> `count` (integer). The number of times to execute the loop body.</li>
-            <li><strong>Example:</strong> <code>repeat 4</code></li>
+            <li><strong>Description:</strong> Executes the enclosed block of code a specified number of times. Can be nested.</li>
+            <li><strong>Example:</strong><br><code>repeat 4<br>&nbsp;&nbsp;move_forward 50<br>end_repeat</code></li>
         </ul>
-        
-        <h4><span class="block-name">end_repeat</span></h4>
+    </div>
+
+    <h3>4. Function Definition & Control (New)</h3>
+    <div class="example-box">
+        <h4><span class="block-name">define `function_name`</span> ... <span class="block-name">end_define</span></h4>
         <ul>
-            <li><strong>Description:</strong> Marks the end of a `repeat` loop block. Must have a corresponding `repeat` command before it.</li>
-            <li><strong>Arguments:</strong> None.</li>
+            <li><strong>Description:</strong> Defines a new custom command. The `function_name` must be a single word (no spaces). All code between `define` and `end_define` is stored as the body of the function. These blocks are not executed immediately.</li>
+            <li><strong>Argument:</strong> `function_name` (string).</li>
+        </ul>
+
+        <h4><span class="block-name">call `function_name`</span></h4>
+        <ul>
+            <li><strong>Description:</strong> Executes the body of a previously defined function. The interpreter will jump to the function's code, execute it, and then return to the next line in the main program.</li>
+            <li><strong>Argument:</strong> `function_name` (string).</li>
+            <li><strong>Example:</strong><br><code>define draw_square<br>&nbsp;&nbsp;repeat 4<br>&nbsp;&nbsp;&nbsp;&nbsp;move_forward 100<br>&nbsp;&nbsp;&nbsp;&nbsp;turn_right 90<br>&nbsp;&nbsp;end_repeat<br>end_define<br><br>call draw_square</code></li>
         </ul>
     </div>
     </body>
