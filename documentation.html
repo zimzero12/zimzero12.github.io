@@ -2,128 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>EchoDraw Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Pen Documentation</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            margin: 40px;
+            margin: 0 auto;
             max-width: 800px;
-            color: #333;
+            padding: 2rem;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
         }
-        h1, h2, h3 {
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
+        h1, h2, h3, h4 {
+            color: #00aaff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
         }
-        .block-name {
-            background-color: #f4f4f4;
-            padding: 2px 6px;
+        p, ul {
+            color: #dcdcdc;
+        }
+        a {
+            color: #00aaff;
+        }
+        code, .cmd {
+            background-color: #333;
+            padding: 0.2em 0.4em;
             border-radius: 4px;
-            font-family: "SF Mono", "Menlo", monospace;
-            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            color: #d4d4d4;
         }
         .example-box {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 15px;
+            background-color: #242424;
+            border: 1px solid #333;
+            padding: 1.5rem;
             border-radius: 8px;
-            margin-top: 15px;
+            margin-top: 1rem;
         }
         .button-name {
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: white;
-            font-family: "SF Mono", "Menlo", monospace;
             font-weight: bold;
         }
-        .run-btn { background-color: #4CAF50; }
-        .save-btn { background-color: #008CBA; }
-        .share-btn { background-color: #f44336; }
     </style>
 </head>
 <body>
-                <h1>Welcome to EchoDraw!</h1>
-    <p>
-        This is the instruction manual for EchoDraw. It contains a guide for beginners and a full language specification for experts.
-    </p>
+
+    <header style="text-align: center; border-bottom: none; margin-bottom: 3rem;">
+        <h1 style="border-bottom: none; font-size: 2.5rem;">Pixel Pen Documentation</h1>
+        <p>Your guide to creating digital art with code.</p>
+    </header>
 
     <!-- SECTION 1: USER GUIDE -->
 
-    <h2>User Guide for Creators</h2>
-    <p>This guide explains how to use the EchoDraw application.</p>
-
-    <h3>The Blocks Reference</h3>
-    <div class="example-box">
-        <h4>Events (New!)</h4>
-        <p>
-            The new <span class="block-name">Events</span> category is the key to making interactive programs and games! Blocks in this category are special "hat" blocks. They don't connect on top of anything else; they are the start of their own script.
-        </p>
-        <p>
-            Use the <span class="block-name">when key pressed</span> block to make your program listen to the keyboard. Any code you put under this hat will only run when you press that specific key. Try making an Etch A Sketch by moving the turtle 10 pixels for each arrow key!
-        </p>
-        
-        <h4>My Blocks</h4>
-        <p>
-            Use the "My Blocks" category to create your own custom commands. This is great for organizing your code and reusing parts you build often, like a block to draw a house or a star.
-        </p>
-
-        <h4>Other Blocks</h4>
-        <p>
-            Use the **Drawing**, **Artist**, and **Logic** blocks to control the turtle, change its appearance, and create repeating patterns.
-        </p>
-    </div>
-
-    <!-- SECTION 2: LANGUAGE SPECIFICATION -->
-
-    <h2>EchoDraw Language Specification</h2>
+    <h2>User Guide</h2>
     <p>
-        EchoDraw is a procedural, imperative, event-driven, turtle graphics language. The interpreter performs a pre-pass to register all function and event definitions before executing the main program logic.
+        Welcome to Pixel Pen! You can think of it as a smart pen that you control with code blocks or by typing. This guide explains how to use the interface.
     </p>
 
-    <h3>1. State Control Commands</h3>
     <div class="example-box">
-        <h4><span class="block-name">move_forward `distance`</span></h4>
-        <ul><li>Moves the turtle forward by an integer number of pixels.</li></ul>
-        
-        <h4><span class="block-name">turn_right `degrees`</span></h4>
-        <ul><li>Rotates the turtle clockwise by an integer number of degrees.</li></ul>
-    </div>
-    
-    <h3>2. Pen Attribute Commands</h3>
-    <div class="example-box">
-        <h4><span class="block-name">pen_up</span> / <span class="block-name">pen_down</span></h4>
-        <ul><li>Lifts or lowers the pen.</li></ul>
-        
-        <h4><span class="block-name">set_color `color`</span></h4>
-        <ul><li>Sets the line color (e.g., `set_color red`).</li></ul>
-        
-        <h4><span class="block-name">set_thickness `width`</span></h4>
-        <ul><li>Sets the line thickness in integer pixels.</li></ul>
-    </div>
-    
-    <h3>3. Flow Control Commands</h3>
-    <div class="example-box">
-        <h4><span class="block-name">repeat `count`</span> ... <span class="block-name">end_repeat</span></h4>
-        <ul><li>Executes the enclosed block of code a specified number of times.</li></ul>
-    </div>
-
-    <h3>4. Function Definition Commands</h3>
-    <div class="example-box">
-        <h4><span class="block-name">define `name`</span> ... <span class="block-name">end_define</span></h4>
-        <ul><li>Defines a new command with the specified `name`.</li></ul>
-        
-        <h4><span class="block-name">call `name`</span></h4>
-        <ul><li>Executes a previously defined function.</li></ul>
-    </div>
-    
-    <h3>5. Event Handling Commands (New)</h3>
-    <div class="example-box">
-        <h4><span class="block-name">on_key `key_name`</span> ... <span class="block-name">end_on_key</span></h4>
+        <h3>The Interface</h3>
         <ul>
-            <li><strong>Description:</strong> Defines an event handler. The enclosed block of code is not executed immediately. Instead, it is registered and will only execute when the corresponding keyboard key is pressed. The `Run Program` button must be clicked once to activate these listeners.</li>
-            <li><strong>Argument:</strong> `key_name` (string). The specific key to listen for. Valid values are `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight`, and `Space`.</li>
-            <li><strong>Example:</strong><br><code>on_key ArrowUp<br>&nbsp;&nbsp;move_forward 10<br>end_on_key<br><br>on_key ArrowLeft<br>&nbsp;&nbsp;turn_right -10<br>end_on_key</code></li>
-        </ul>
-    </div>
-    </body>
-</html>
+            <li><strong>Block Editor (Left):</strong> This is your creative space. Drag and drop blocks from the toolbox to build your program.</li>
+            <li><strong>Output Area (Right):</strong> Thi
