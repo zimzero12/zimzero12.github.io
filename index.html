@@ -6,25 +6,18 @@
     <title>Pixel Pen</title>
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <style>
-        /* CSS Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
-        body, h1, h2, p {
-            margin: 0;
-        }
-
-        /* Themed Colors */
         :root {
-            --background-dark: #1a1a1a;
-            --background-medium: #242424;
+            --background-dark: #1e1e1e;
+            --background-medium: #252526;
             --background-light: #333333;
             --accent-blue: #00aaff;
             --text-primary: #f0f0f0;
-            --text-secondary: #a0a0a0;
         }
-
-        /* General Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--background-dark);
@@ -34,29 +27,24 @@
             height: 100vh;
             overflow: hidden;
         }
-
-        /* Header */
         header {
             width: 100%;
             text-align: center;
             padding: 1rem;
             background-color: var(--background-medium);
             border-bottom: 1px solid var(--background-light);
+            flex-shrink: 0;
         }
         header h1 {
             font-size: 1.5rem;
             color: var(--accent-blue);
         }
-
-        /* Main App Layout */
         #app-container {
             display: flex;
             flex-grow: 1;
             width: 100%;
             height: calc(100vh - 65px);
         }
-
-        /* Left Panel: Blockly Editor */
         #blockly-container {
             width: 60%;
             height: 100%;
@@ -69,8 +57,6 @@
             right: 0;
             bottom: 0;
         }
-
-        /* Right Panel: Output & Controls */
         #output-container {
             width: 40%;
             height: 100%;
@@ -79,13 +65,12 @@
             background-color: var(--background-medium);
             border-left: 1px solid var(--background-light);
         }
-
-        /* Action Buttons */
         #button-bar {
             display: flex;
             padding: 0.5rem;
             background-color: var(--background-dark);
             border-bottom: 1px solid var(--background-light);
+            flex-shrink: 0;
         }
         #button-bar button {
             flex-grow: 1;
@@ -107,10 +92,9 @@
             background-color: var(--accent-blue);
             color: var(--background-dark);
         }
-
-        /* Tabs for Canvas/Code */
         #tabs {
             display: flex;
+            flex-shrink: 0;
         }
         .tab-button {
             padding: 0.75rem;
@@ -121,17 +105,16 @@
             border: none;
             color: var(--text-primary);
             border-bottom: 3px solid transparent;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, color 0.2s;
         }
         .tab-button.active {
-            border-bottom: 3px solid var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
             color: var(--accent-blue);
         }
-
-        /* The Content Panes */
         .tab-content {
             flex-grow: 1;
             position: relative;
+            overflow: hidden;
         }
         #canvas-wrapper,
         #code-editor-wrapper {
@@ -141,11 +124,11 @@
             right: 0;
             bottom: 0;
             padding: 1rem;
-            visibility: hidden; /* Use visibility for robust tab switching */
+            display: none;
         }
         #canvas-wrapper.active,
         #code-editor-wrapper.active {
-            visibility: visible;
+            display: block;
         }
         #drawingCanvas {
             width: 100%;
@@ -156,7 +139,7 @@
         #code-editor {
             width: 100%;
             height: 100%;
-            background-color: #1e1e1e;
+            background-color: var(--background-dark);
             color: var(--text-primary);
             border: 1px solid var(--background-light);
             border-radius: 5px;
@@ -165,13 +148,12 @@
             font-size: 1rem;
             resize: none;
         }
-
-        /* Mobile Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 800px) {
             #app-container {
                 flex-direction: column;
             }
-            #blockly-container, #output-container {
+            #blockly-container,
+            #output-container {
                 width: 100%;
                 height: 50%;
             }
@@ -184,34 +166,25 @@
 </head>
 <body>
 
-    <header>
-        <h1>Pixel Pen</h1>
-    </header>
-
+    <header><h1>Pixel Pen</h1></header>
+    
     <div id="app-container">
         <div id="blockly-container">
             <div id="blocklyDiv"></div>
         </div>
-
         <div id="output-container">
             <div id="button-bar">
                 <button id="runBtn" onclick="runCode()">▶ Run</button>
                 <button id="saveBtn" onclick="saveDrawing()">💾 Save</button>
                 <button id="shareBtn" onclick="shareProgram()">🔗 Share</button>
             </div>
-            
             <div id="tabs">
                 <button id="canvas-tab" class="tab-button active" onclick="showTab('canvas')">Canvas</button>
                 <button id="code-tab" class="tab-button" onclick="showTab('code')">Code</button>
             </div>
-
             <div class="tab-content">
-                <div id="canvas-wrapper" class="active">
-                    <canvas id="drawingCanvas"></canvas>
-                </div>
-                <div id="code-editor-wrapper">
-                    <textarea id="code-editor"></textarea>
-                </div>
+                <div id="canvas-wrapper" class="active"><canvas id="drawingCanvas"></canvas></div>
+                <div id="code-editor-wrapper"><textarea id="code-editor"></textarea></div>
             </div>
         </div>
     </div>
@@ -230,20 +203,15 @@
         // =================================================================
         // PART 0: THEME AND UI LOGIC
         // =================================================================
-
         const DarkTheme = Blockly.Theme.defineTheme('dark', {
             'base': Blockly.Themes.Classic,
             'componentStyles': {
-                'workspaceBackgroundColour': '#1e1e1e',
-                'toolboxBackgroundColour': '#252526',
-                'toolboxForegroundColour': '#fff',
+                'workspaceBackgroundColour': '#252526',
+                'toolboxBackgroundColour': '#1e1e1e',
+                'toolboxForegroundColour': '#f0f0f0',
                 'flyoutBackgroundColour': '#252526',
-                'flyoutForegroundColour': '#ccc',
-                'flyoutOpacity': 1,
-                'scrollbarColour': '#797979',
-                'insertionMarkerColour': '#fff',
-                'insertionMarkerOpacity': 0.3,
-                'scrollbarOpacity': 0.4,
+                'flyoutForegroundColour': '#dcdcdc',
+                'scrollbarColour': '#3e3e3e',
             },
         });
         
@@ -253,17 +221,13 @@
         const codeTab = document.getElementById('code-tab');
 
         function showTab(tabName) {
-            if (tabName === 'canvas') {
-                canvasWrapper.classList.add('active');
-                codeWrapper.classList.remove('active');
-                canvasTab.classList.add('active');
-                codeTab.classList.remove('active');
+            const isCanvas = (tabName === 'canvas');
+            canvasWrapper.classList.toggle('active', isCanvas);
+            codeWrapper.classList.toggle('active', !isCanvas);
+            canvasTab.classList.toggle('active', isCanvas);
+            codeTab.classList.toggle('active', !isCanvas);
+            if (isCanvas) {
                 resizeCanvas();
-            } else {
-                codeWrapper.classList.add('active');
-                canvasWrapper.classList.remove('active');
-                codeTab.classList.add('active');
-                canvasTab.classList.remove('active');
             }
         }
         
@@ -271,82 +235,41 @@
 
         function resizeCanvas() {
             setTimeout(function() {
-                const rect = canvasWrapper.getBoundingClientRect();
-                canvas.width = rect.width;
-                canvas.height = rect.height;
+                const rect = canvas.parentElement.getBoundingClientRect();
+                if (rect.width > 0 && rect.height > 0) {
+                    canvas.width = rect.width;
+                    canvas.height = rect.height;
+                }
             }, 0);
         }
 
         window.addEventListener('resize', resizeCanvas);
-
 
         // =================================================================
         // PART 1: BLOCKLY SETUP
         // =================================================================
         
         Blockly.Blocks['event_when_key_pressed'] = {
-            init: function() {
-                this.appendDummyInput().appendField("when").appendField(new Blockly.FieldDropdown([["up arrow", "ArrowUp"], ["down arrow", "ArrowDown"], ["left arrow", "ArrowLeft"], ["right arrow", "ArrowRight"], ["space", "Space"]]), "KEY").appendField("key pressed");
-                this.setNextStatement(true, null);
-                this.setColour(35);
-            }
+            init: function() { this.appendDummyInput().appendField("when").appendField(new Blockly.FieldDropdown([["up arrow","ArrowUp"],["down arrow","ArrowDown"],["left arrow","ArrowLeft"],["right arrow","ArrowRight"],["space","Space"]]), "KEY").appendField("key pressed"); this.setNextStatement(true, null); this.setColour(35); }
         };
-
         Blockly.Blocks['loop_block'] = {
-            init: function() {
-                this.appendValueInput("TIMES").setCheck("Number").appendField("loop");
-                this.appendStatementInput("DO").setCheck(null);
-                this.setPreviousStatement(true, null);
-                this.setNextStatement(true, null);
-                this.setColour(210);
-            }
+            init: function() { this.appendValueInput("TIMES").setCheck("Number").appendField("loop"); this.appendStatementInput("DO").setCheck(null); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(210); }
         };
-
         Blockly.Blocks['pen_draw'] = {
-            init: function() {
-                this.appendValueInput("VALUE").setCheck("Number").appendField("draw");
-                this.setPreviousStatement(true, null);
-                this.setNextStatement(true, null);
-                this.setColour(120);
-            }
+            init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("draw"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(120); }
         };
-
         Blockly.Blocks['pen_turn'] = {
-            init: function() {
-                this.appendValueInput("VALUE").setCheck("Number").appendField("turn");
-                this.setPreviousStatement(true, null);
-                this.setNextStatement(true, null);
-                this.setColour(120);
-            }
+            init: function() { this.appendValueInput("VALUE").setCheck("Number").appendField("turn"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(120); }
         };
-
         Blockly.Blocks['pen_lift_drop'] = {
-            init: function() {
-                this.appendDummyInput().appendField(new Blockly.FieldDropdown([["drop", "DROP"], ["lift", "LIFT"]]), "STATE").appendField("pen");
-                this.setPreviousStatement(true, null);
-                this.setNextStatement(true, null);
-                this.setColour(290);
-            }
+            init: function() { this.appendDummyInput().appendField(new Blockly.FieldDropdown([["drop","DROP"],["lift","LIFT"]]), "STATE").appendField("pen"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); }
         };
-
         Blockly.Blocks['pen_color'] = {
-            init: function() {
-                this.appendDummyInput().appendField("color").appendField(new Blockly.FieldDropdown([["red", "red"], ["blue", "blue"], ["green", "green"], ["yellow", "yellow"], ["black", "black"], ["white", "white"]]), "COLOR");
-                this.setPreviousStatement(true, null);
-                this.setNextStatement(true, null);
-                this.setColour(290);
-            }
+            init: function() { this.appendDummyInput().appendField("color").appendField(new Blockly.FieldDropdown([["red","red"],["blue","blue"],["green","green"],["yellow","yellow"],["black","black"],["white","white"]]), "COLOR"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); }
         };
-
         Blockly.Blocks['pen_stroke'] = {
-            init: function() {
-                this.appendValueInput("WIDTH").setCheck("Number").appendField("stroke");
-                this.setPreviousStatement(true, null);
-                this.setNextStatement(true, null);
-                this.setColour(290);
-            }
+            init: function() { this.appendValueInput("WIDTH").setCheck("Number").appendField("stroke"); this.setPreviousStatement(true, null); this.setNextStatement(true, null); this.setColour(290); }
         };
-        
         const PixelPen = new Blockly.Generator('PixelPen');
         PixelPen.forBlock['variables_set'] = function(b) { const n=b.getFieldValue('VAR'); const v=PixelPen.valueToCode(b,'VALUE',0)||'0'; return `set ${n} ${v}\n`; };
         PixelPen.forBlock['math_change'] = function(b) { const n=b.getFieldValue('VAR'); const v=PixelPen.valueToCode(b,'DELTA',0)||'0'; return `change ${n} ${v}\n`; };
@@ -361,17 +284,13 @@
         PixelPen.forBlock['pen_stroke'] = function(b) { const w=PixelPen.valueToCode(b,'WIDTH',0)||'1'; return `stroke ${w}\n`; };
         PixelPen.forBlock['procedures_defnoreturn'] = function(b) { const f=b.getFieldValue('NAME'); const c=PixelPen.statementToCode(b, 'STACK'); return `tool ${f}\n${c}end_tool\n`; };
         PixelPen.forBlock['procedures_callnoreturn'] = function(b) { return `use ${b.getFieldValue('NAME')}\n`; };
-        PixelPen.scrub_ = function(b, c) { const n=b.nextConnection&&b.nextConnection.targetBlock(); return c+PixelPen.blockToCode(n); };
+        PixelPen.scrub_ = function(b,c){const next = b.nextConnection && b.nextConnection.targetBlock(); return c + PixelPen.blockToCode(next);};
         
-        const workspace = Blockly.inject('blocklyDiv', { 
-            toolbox: document.getElementById('toolbox'),
-            theme: DarkTheme
-        });
+        const workspace = Blockly.inject('blocklyDiv', { toolbox: document.getElementById('toolbox'), theme: DarkTheme });
         
         workspace.addChangeListener(e => {
             document.getElementById('code-editor').value = PixelPen.workspaceToCode(workspace);
         });
-
 
         // =================================================================
         // PART 2: THE PEN OBJECT
@@ -380,8 +299,7 @@
         const pen = {
             x: 0, y: 0, angle: 0, isDown: true,
             reset: function() {
-                // THE FIX: DO NOT resize the canvas here.
-                // Only clear it and reset the pen's logical state.
+                resizeCanvas();
                 this.x = canvas.width / 2;
                 this.y = canvas.height / 2;
                 this.angle = -90;
@@ -392,23 +310,14 @@
                 ctx.lineCap = "round";
             },
             draw: function(distance) {
-                const startX = this.x;
-                const startY = this.y;
+                const startX = this.x, startY = this.y;
                 const rad = this.angle * (Math.PI / 180);
                 this.x += Math.cos(rad) * distance;
                 this.y += Math.sin(rad) * distance;
-                if (this.isDown) {
-                    ctx.beginPath();
-                    ctx.moveTo(startX, startY);
-                    ctx.lineTo(this.x, this.y);
-                    ctx.stroke();
-                }
+                if (this.isDown) { ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(this.x, this.y); ctx.stroke(); }
             },
-            turn: function(degrees) {
-                this.angle += degrees;
-            }
+            turn: function(degrees) { this.angle += degrees; }
         };
-
         
         // =================================================================
         // PART 3: THE INTERPRETER ENGINE
@@ -420,9 +329,7 @@
         function runCode() {
             pen.reset();
             variables = {};
-            for (const key in registeredEvents) {
-                document.removeEventListener('keydown', registeredEvents[key]);
-            }
+            for (const key in registeredEvents) { document.removeEventListener('keydown', registeredEvents[key]); }
             registeredEvents = {};
 
             const code = document.getElementById('code-editor').value;
@@ -430,15 +337,14 @@
             const functions = {};
             let mainProgram = [];
             
-            let isParsingFunction = false;
-            let isParsingEvent = false;
-            let currentName = null;
-            let currentBody = [];
+            let isParsingFunction = false, isParsingEvent = false;
+            let currentName = null, currentBody = [];
 
             for (const line of allLines) {
                 const trimmed = line.trim();
-                const parts = trimmed.split(' ');
+                const parts = trimmed.split(/\s+/); // Use regex to split robustly
                 const command = parts[0];
+
                 if (command === 'tool' || command === 'when') {
                     isParsingFunction = (command === 'tool');
                     isParsingEvent = (command === 'when');
@@ -458,107 +364,52 @@
         }
 
         function resolveValue(rawValue) {
-            if (String(rawValue).startsWith('var(')) {
-                const varName = rawValue.slice(4, -1);
+            const trimmedValue = String(rawValue).trim();
+            if (trimmedValue.startsWith('var(')) {
+                const varName = trimmedValue.slice(4, -1);
                 return variables[varName] || 0;
             }
-            return parseInt(rawValue) || 0;
+            return parseInt(trimmedValue) || 0;
         }
 
         function execute(lines) {
-            // This function processes an array of code lines robustly.
             for (let i = 0; i < lines.length; i++) {
-                
-                // THE FIX: Trim whitespace so indented lines work.
-                const trimmedLine = lines[i].trim();
-
-                // If the line is now empty, skip it.
-                if (!trimmedLine) {
-                    continue;
-                }
-
-                // Split by any amount of space to be robust.
-                const parts = trimmedLine.split(/\s+/);
+                const parts = lines[i].trim().split(/\s+/);
                 const command = parts[0];
-
-                if (command === 'draw') {
-                    pen.draw(resolveValue(parts[1]));
-                } else if (command === 'turn') {
-                    pen.turn(resolveValue(parts[1]));
-                } else if (command === 'lift') {
-                    pen.isDown = false;
-                } else if (command === 'drop') {
-                    pen.isDown = true;
-                } else if (command === 'color') {
-                    ctx.strokeStyle = parts[1];
-                } else if (command === 'stroke') {
-                    ctx.lineWidth = resolveValue(parts[1]);
-                } else if (command === 'set') {
-                    const varName = parts[1];
-                    const value = resolveValue(parts[2]);
-                    variables[varName] = value;
-                } else if (command === 'change') {
-                    const varName = parts[1];
-                    const value = resolveValue(parts[2]);
-                    variables[varName] = (variables[varName] || 0) + value;
-                } else if (command === 'use') {
-                    const functionName = parts[1];
-                    if (functions[functionName]) {
-                        execute(functions[functionName]);
-                    }
-                } else if (command === 'loop') {
+                if (command === 'draw') pen.draw(resolveValue(parts[1]));
+                else if (command === 'turn') pen.turn(resolveValue(parts[1]));
+                else if (command === 'lift') pen.isDown = false;
+                else if (command === 'drop') pen.isDown = true;
+                else if (command === 'color') ctx.strokeStyle = parts[1];
+                else if (command === 'stroke') ctx.lineWidth = resolveValue(parts[1]);
+                else if (command === 'set') { variables[parts[1]] = resolveValue(parts[2]); }
+                else if (command === 'change') { variables[parts[1]] = (variables[parts[1]] || 0) + resolveValue(parts[2]); }
+                else if (command === 'use') { if (functions[parts[1]]) execute(functions[parts[1]]); }
+                else if (command === 'loop') {
                     const count = resolveValue(parts[1]);
                     let body = [];
                     let level = 1;
                     let end = -1;
-
                     for (let j = i + 1; j < lines.length; j++) {
-                        const nestedLine = lines[j].trim();
-                        if (nestedLine.startsWith('loop')) {
-                            level++;
-                        }
-                        if (nestedLine === 'end_loop') {
-                            level--;
-                        }
-                        if (level === 0) {
-                            end = j;
-                            break;
-                        }
+                        const line = lines[j].trim();
+                        if (line.startsWith('loop')) level++;
+                        if (line === 'end_loop') level--;
+                        if (level === 0) { end = j; break; }
                     }
-
                     if (end !== -1) {
                         body = lines.slice(i + 1, end);
-                        for (let k = 0; k < count; k++) {
-                            execute(body);
-                        }
+                        for (let k = 0; k < count; k++) { execute(body); }
                         i = end;
-                    }
-                }
-            }
-        }
-
-                    if (end !== -1) {
-                        body = lines.slice(i + 1, end);
-                        for (let k = 0; k < count; k++) {
-                            execute(body); // Recursively call for loops
-                        }
-                        i = end; // Jump the main loop past this block
                     }
                 }
             }
         }
         
         function registerKeyEvent(key, body) {
-            const eventHandler = function(event) {
-                if (event.key === key) {
-                    event.preventDefault();
-                    execute(body);
-                }
-            };
-            document.addEventListener('keydown', eventHandler);
-            registeredEvents[key] = eventHandler;
+            const handler = function(event) { if (event.key === key) { event.preventDefault(); execute(body); } };
+            document.addEventListener('keydown', handler);
+            registeredEvents[key] = handler;
         }
-
         
         // =================================================================
         // PART 4: CREATOR'S TOOLKIT & ONLOAD
@@ -577,20 +428,16 @@
             const link = `${window.location.origin}${window.location.pathname}#code=${encoded}`;
             prompt("Copy this link to share your program:", link);
         }
-
+        
         window.onload = function() {
             if (window.location.hash.startsWith('#code=')) {
                 try {
-                    const decoded = atob(window.location.hash.substring(6));
-                    document.getElementById('code-editor').value = decoded;
-                } catch (e) {
-                    console.error("Failed to load shared code:", e);
-                }
+                    document.getElementById('code-editor').value = atob(window.location.hash.substring(6));
+                } catch (e) { console.error("Failed to load shared code:", e); }
             }
-            showTab('canvas'); // Always start on the canvas view
+            showTab('canvas');
             runCode();
         };
-
     </script>
 </body>
 </html>
